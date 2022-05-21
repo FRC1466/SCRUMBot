@@ -6,3 +6,7 @@ A discord bot written in Python that gets data from a SCRUM Google Sheet to disp
 - Pygsheets
 - Discord.py
 - Os
+
+# Commands
+- <pre>display_shortcuts</pre>: Displays all shortcuts
+- <pre>view_tasks</pre>: Views tasks of a certain category and status

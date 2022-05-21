@@ -28,7 +28,9 @@ sheet_order = {'CAD': 0, 'Mechanical': 1, 'Electrical': 2, 'Code': 3, 'Business/
                'Strategy/Scouting': 5, 'Media': 6, 'Website': 7}
 
 sheets = ['CAD', 'Mechanical', 'Electrical', 'Code', 'Business/Outreach', 'Strategy/Scouting', 'Media', 'Website']
-lower_sheets = [val.lower() for val in sheets]
+lower_sheets = ['cad', 'mechanical', 'electrical', 'code', 'business/outreach', 'strategy/scouting', 'media', 'website']
+l_u_sheet = {'cad': 'CAD', 'mechanical': 'Mechanical', 'code': 'Code', 'business/outreach': 'Business/Outreach',
+             'strategy/scouting': 'Strategy/Scouting', 'media': 'Media', 'website': 'Website'}
 
 status_order = {'TODO': 1, 'In progress': 2, 'Done': 3}
 
@@ -38,12 +40,15 @@ status_order = {'TODO': 1, 'In progress': 2, 'Done': 3}
 @bot.command(name='view_tasks', help='Views in progress, done, or TODO tasks in categories')
 async def view_tasks(ctx, demand: str, category: str):
     cat = category
-    if category not in lower_sheets:
+    if category.lower() not in lower_sheets:
         if category.lower() in shortcuts:
             cat = shortcuts_dict[category]
         else:
             await ctx.send('This category or shortcut to a category does not exist')
-    sheet = sh[sheet_order[cat]]
+    if cat not in sheets:
+        sheet = sh[sheet_order[l_u_sheet[cat.lower()]]]
+    else:
+        sheet = sh[sheet_order[cat]]
     tasks = sheet.get_col(status_order[demand])
     msg = ''
     for task in tasks[1:]:

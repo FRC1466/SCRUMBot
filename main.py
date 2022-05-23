@@ -33,6 +33,8 @@ l_u_sheet = {'cad': 'CAD', 'mechanical': 'Mechanical', 'code': 'Code', 'business
              'strategy/scouting': 'Strategy/Scouting', 'media': 'Media', 'website': 'Website'}
 
 status_order = {'TODO': 1, 'In progress': 2, 'Done': 3}
+status_orders = ['TODO', 'In progress', 'Done']
+status_orders_low = [val.lower() for val in status_orders]
 
 # Commands
 
@@ -49,7 +51,15 @@ async def view_tasks(ctx, demand: str, category: str):
         sheet = sh[sheet_order[l_u_sheet[cat.lower()]]]
     else:
         sheet = sh[sheet_order[cat]]
-    tasks = sheet.get_col(status_order[demand])
+    if demand.lower() in status_orders_low:
+        tasks = sheet.get_col(status_order[demand])
+    elif demand.lower() == 'active':
+        tasks = sheet.get_col(1)
+        for val in sheet.get_col(2)[1:]:
+            if val != '':
+                tasks.append(val)
+    else:
+        await ctx.send('This status does not exist. The four statuses are ToDo, In Progress, Done, and Active (which is both todo and in progress tasks)')
     msg = ''
     for task in tasks[1:]:
         if task != '':
